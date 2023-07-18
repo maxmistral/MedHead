@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\MedHead_Front.props" />
+</Project>

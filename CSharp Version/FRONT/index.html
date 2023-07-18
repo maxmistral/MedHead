@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Response System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Hôpitaux</h2>
+        <table class="table table-striped" id="hospitalsTable">
+            <thead>
+				<tr>
+					<th>ID</th>
+					<th>Nom</th>
+					<th>Adresse</th>
+					<th>Ville</th>
+					<th>Code Postal</th>
+					<th>Lits Disponibles</th>
+				</tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        
+        <h2 class="mb-4">Ajouter un hôpital</h2>
+        <form id="addHospitalForm">
+            <div class="form-group">
+                <label for="hospitalName">Nom</label>
+                <input type="text" class="form-control" id="hospitalName" placeholder="Entrez le nom de l'hôpital">
+            </div>
+            <div class="form-group">
+                <label for="hospitalCity">Ville</label>
+                <input type="text" class="form-control" id="hospitalCity" placeholder="Entrez la ville de l'hôpital">
+            </div>
+            <div class="form-group">
+                <label for="hospitalBeds">Lits Disponibles</label>
+                <input type="number" class="form-control" id="hospitalBeds" placeholder="Entrez le nombre de lits disponibles">
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </form>
+				<form id="addPatientForm">
+			<div class="form-group">
+				<label for="patientFirstName">Prénom</label>
+				<input type="text" class="form-control" id="patientFirstName" placeholder="Entrez le prénom du patient">
+			</div>
+			<div class="form-group">
+				<label for="patientLastName">Nom de famille</label>
+				<input type="text" class="form-control" id="patientLastName" placeholder="Entrez le nom de famille du patient">
+			</div>
+			<div class="form-group">
+				<label for="patientAddress">Adresse</label>
+				<input type="text" class="form-control" id="patientAddress" placeholder="Entrez l'adresse du patient">
+			</div>
+			<div class="form-group">
+				<label for="patientCity">Ville</label>
+				<input type="text" class="form-control" id="patientCity" placeholder="Entrez la ville du patient">
+			</div>
+			<div class="form-group">
+				<label for="patientZip">Code Postal</label>
+				<input type="text" class="form-control" id="patientZip" placeholder="Entrez le code postal du patient">
+			</div>
+			<button type="submit" class="btn btn-primary">Ajouter</button>
+		</form>
+
+    </div>
+	
+	<h2 class="mb-4">Ajouter un patient</h2>
+    <script>
+        $(document).ready(function() {
+            // On charge les hopitaux dispos
+            loadHospitals();
+
+            $('#addHospitalForm').submit(function(e) {
+                e.preventDefault();
+                var hospital = {
+                    Nom: $('#hospitalName').val(),
+                    Ville: $('#hospitalCity').val(),
+                    LitsDisponibles: $('#hospitalBeds').val()
+                };
+                $.post('https://localhost:7014/api/Emergency', hospital)
+                    .done(function(data) {
+                        alert('L\'hôpital a été ajouté avec succès.');
+                        loadHospitals();
+                    })
+                    .fail(function() {
+                        alert('Une erreur est survenue lors de l\'ajout de l\'hôpital.');
+                    });
+            });
+        });
+
+		function loadHospitals() {
+			$.get('https://localhost:7014/api/Emergency', function(data) {
+				var tbody = $('#hospitalsTable tbody');
+				tbody.empty();
+				data.forEach(function(hospital) {
+					tbody.append('<tr><td>' + hospital.id + '</td><td>' + hospital.nom + '</td><td>' + hospital.adresse + '</td><td>' + hospital.ville + '</td><td>' + hospital.codePostal + '</td><td>' + hospital.litsDisponibles + '</td></tr>');
+				});
+			});
+		}
+
+
+$('#addPatientForm').submit(function(e) {
+    e.preventDefault();
+    var patient = {
+        Id: -1, // -1 = demander au back un nouvel ID lors de la création
+        Prenom: $('#patientFirstName').val(),
+        Nom: $('#patientLastName').val(),
+        NomJF: '', 
+        DateNaissance: '',
+        Adresse: $('#patientAddress').val(),
+        Ville: $('#patientCity').val(),
+        CodePostal: $('#patientZip').val(),
+        NumINSEE: '',
+        Location: '',
+        SpecialiteRequise: 0
+    };
+    $.ajax({
+        url: 'https://localhost:7014/api/Emergency',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify(patient),
+        success: function(data) {
+            alert('Le patient a été ajouté avec succès.');
+            loadHospitals();  // Après ajout, on recharge les hopitaux
+        },
+        error: function() {
+            alert('Une erreur est survenue lors de l\'ajout du patient.');
+        }
+    });
+});
+
+
+
+    </script>
+</body>
+</html>

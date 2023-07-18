@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\EmergencyResponseSystem_API.props" />
+</Project>

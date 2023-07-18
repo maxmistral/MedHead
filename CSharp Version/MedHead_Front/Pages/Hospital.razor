@@ -1,0 +1,43 @@
+﻿@page "/hospital"
+@using EmergencyResponseSystem.Models;
+@inject HttpClient Http
+
+<h3>Liste d'Hôpitaux</h3>
+
+@if (hospitals == null)
+{
+    <p><em>Chargement...</em></p>
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Spécialisations</th>
+                <th>Lits Disponibles</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Hopital hospital in hospitals)
+            {
+                <tr>
+                    <td>@hospital.Nom</td>
+                    <td>@hospital.Adresse</td>
+                    <td>@string.Join(", ", hospital.Specialisations.Select(s => s.Libelle))</td>
+                    <td>@hospital.LitsDisponibles</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Hopital> hospitals;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hospitals = await Http.GetFromJsonAsync<List<Hopital>>("https://localhost:7014/api/emergency");
+    }
+}
