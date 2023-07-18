@@ -28,4 +28,10 @@ jobs:
     - name: Test with Gradle
       run: ./gradlew test
       working-directory: ./Backend
-
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifacts
+        path: |
+          ./Backend/build/libs/*.jar
+          ./Backend/build/reports/tests/test/index.html
