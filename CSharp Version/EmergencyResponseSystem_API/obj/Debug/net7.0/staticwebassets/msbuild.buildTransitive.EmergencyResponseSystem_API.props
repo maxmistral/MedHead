@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\EmergencyResponseSystem_API.props" />
-</Project>
