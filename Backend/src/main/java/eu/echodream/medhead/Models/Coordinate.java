@@ -17,4 +17,3 @@ public class Coordinate {
         return this.lng;
     }
 }
-

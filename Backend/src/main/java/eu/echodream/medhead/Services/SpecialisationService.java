@@ -16,27 +16,28 @@ public class SpecialisationService {
     }
 
     public List<Specialisation> getAll() {
-        String query = "SELECT Id, Libelle FROM Specialisation";
+        String query = "SELECT Id, Libelle, Categorie FROM Specialisation";
         return jdbcTemplate.query(query, specialisationRowMapper());
     }
 
     public Specialisation get(int id) {
-        String query = "SELECT Id, Libelle FROM Specialisation WHERE Id = ?";
+        String query = "SELECT Id, Libelle, Categorie FROM Specialisation WHERE Id = ?";
         return jdbcTemplate.queryForObject(query, new Object[]{id}, specialisationRowMapper());
     }
 
     public List<Specialisation> getByHopital(int hopitalId) {
-        String query = "SELECT s.Id, s.Libelle FROM Specialisation s INNER JOIN HopitalSpecialisation hs ON s.Id = hs.SpecialisationId WHERE hs.HopitalId = ?";
+        String query = "SELECT s.Id, s.Libelle, s.Categorie FROM Specialisation s INNER JOIN HopitalSpecialisation hs ON s.Id = hs.SpecialisationId WHERE hs.HopitalId = ?";
         return jdbcTemplate.query(query, new Object[]{hopitalId}, specialisationRowMapper());
     }
 
     public int insert(Specialisation specialisation) {
-        String query = "INSERT INTO Specialisation (Libelle) VALUES (?); SELECT last_insert_rowid();";
-        return jdbcTemplate.update(query, specialisation.getLibelle());
+        String query = "INSERT INTO Specialisation (Libelle, Categorie) VALUES (?, ?);";
+        jdbcTemplate.update(query, specialisation.getLibelle(), specialisation.getCategorie());
+        return jdbcTemplate.queryForObject("SELECT MAX(Id) FROM Specialisation", Integer.class);
     }
 
     public int update(Specialisation specialisation) {
-        String query = "UPDATE Specialisation SET Libelle = ? WHERE Id = ?";
+        String query = "UPDATE Specialisation SET Libelle = ?, Categorie = ? WHERE Id = ?";
         return jdbcTemplate.update(query, specialisation.getLibelle(), specialisation.getId());
     }
 
@@ -50,6 +51,7 @@ public class SpecialisationService {
             Specialisation specialisation = new Specialisation();
             specialisation.setId(rs.getInt("Id"));
             specialisation.setLibelle(rs.getString("Libelle"));
+            specialisation.setCategorie(rs.getString("Categorie"));
             return specialisation;
         };
     }

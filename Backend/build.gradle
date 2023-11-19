@@ -15,26 +15,37 @@ repositories {
 	mavenCentral()
 }
 
+
 dependencies {
+	// Dépendances Spring
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.0.4'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.3'
+	// implementation 'org.springframework.boot:spring-boot-starter-security:3.0.4'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.4'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.0.4'
+
+	// Dépendances non relatives à Spring
 	implementation 'javax.servlet:javax.servlet-api:4.0.1'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.xerial:sqlite-jdbc:3.40.1.0'
-	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
-	implementation 'io.swagger.core.v3:swagger-annotations:2.1.2'
 	implementation 'io.github.jbock-java:dapper:2.41.2'
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 	implementation 'com.google.code.gson:gson:2.10.1'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
+
+	// Configuration pour un rapport détaillé des tests dans la console
+	testLogging {
+		events "passed", "skipped", "failed"
+		showStandardStreams = true // Afin d'afficher les sorties console des tests
+		exceptionFormat = 'full'  // On affiche les exceptions complètes
+	}
+
+	finalizedBy 'testReport'
+}
+
+task testReport(type: TestReport) {
+	destinationDir = file("$buildDir/reports/tests/test")
+	reportOn tasks.withType(Test)
 }

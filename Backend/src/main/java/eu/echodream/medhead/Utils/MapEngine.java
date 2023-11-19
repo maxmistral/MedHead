@@ -1,8 +1,8 @@
 package eu.echodream.medhead.Utils;
 
-import com.nimbusds.jose.shaded.gson.Gson;
-import com.nimbusds.jose.shaded.gson.JsonArray;
-import com.nimbusds.jose.shaded.gson.JsonObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import eu.echodream.medhead.Models.Coordinate;
 
 import java.io.BufferedReader;

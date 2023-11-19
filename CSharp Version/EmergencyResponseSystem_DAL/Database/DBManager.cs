@@ -4,6 +4,7 @@ using EmergencyResponseSystem_DAL.Services;
 using EmergencyResponseSystem_DAL.Settings;
 using EmergencyResponseSystem_Models;
 using Logger;
+using MedHead_DAL;
 using System.Data;
 using System.Data.SQLite;
 
@@ -88,8 +89,8 @@ namespace EmergencyResponseSystem_DAL.Database
                         Ville TEXT NOT NULL,
                         CodePostal TEXT NOT NULL,
                         NumINSEE TEXT NOT NULL,
-                        Location TEXT NOT NULL,
-                        SpecialiteRequise TEXT NOT NULL
+                        HopitalActuel INTEGER NOT NULL DEFAULT -1,
+                        SpecialiteRequise INTEGER NOT NULL
                     )";
 
                     await connection.ExecuteAsync(query);
@@ -148,7 +149,8 @@ namespace EmergencyResponseSystem_DAL.Database
                     CREATE TABLE IF NOT EXISTS Specialisation
                     (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Libelle TEXT NOT NULL
+                        Libelle TEXT NOT NULL,
+                        Categorie TEXT NOT NULL
                     )";
 
                     await connection.ExecuteAsync(query);
@@ -204,28 +206,58 @@ namespace EmergencyResponseSystem_DAL.Database
                 var hopitalSpecialisationService = new HopitalSpecialisationService();
                 var hopitalService = new HopitalService(specialisationService, hopitalSpecialisationService);
 
-                // Création des spécialisations
-                var specialisations = new List<Specialisation>
-            {
-                new Specialisation { Libelle = "Cardiologie" },
-                new Specialisation { Libelle = "Général" },
-                new Specialisation { Libelle = "Neurologie" },
-                new Specialisation { Libelle = "Dermatologie" },
-                new Specialisation { Libelle = "Orthopédie" },
-                new Specialisation { Libelle = "Gastro-entérologie" }
-            };
+                var specialisations = new List<Specialisation>();
+
+                // Fichier ressources incorporés à l'assembly.
+                var csvString = Ressources.specialites;
+
+                using (var reader = new StringReader(csvString))
+                {
+                    // On ignore la ligne d'en-ytête
+                    reader.ReadLine();
+
+                    while (true)
+                    {
+                        var line = reader.ReadLine();
+                        if (line == null)
+                            break;
+
+                        var values = line.Split(';');
+
+                        if (values.Length >= 2)
+                        {
+                            var libelle = values[1].Trim();
+                            var categorie = values[0].Trim();
+
+                            var specialisation = new Specialisation
+                            {
+                                Libelle = libelle,
+                                Categorie = categorie
+                            };
+
+                            specialisations.Add(specialisation);
+                        }
+                    }
+                }
                 foreach (var specialisation in specialisations)
                 {
                     await specialisationService.InsertAsync(specialisation);
                 }
 
+                int count = specialisations.Count;
+                int chunkSize = count / 4;
+
+                var sousListe1 = specialisations.GetRange(0, chunkSize);
+                var sousListe2 = specialisations.GetRange(chunkSize, chunkSize);
+                var sousListe3 = specialisations.GetRange(2 * chunkSize, chunkSize);
+                var sousListe4 = specialisations.GetRange(3 * chunkSize, count - 3 * chunkSize);
                 // Création des hôpitaux
                 var hopitaux = new List<Hopital>
             {
-                new Hopital { Nom = "Hôpital A", Adresse = "Adresse A", Ville = "Ville A", CodePostal = "Code A", LitsDisponibles = 100 },
-                new Hopital { Nom = "Hôpital B", Adresse = "Adresse B", Ville = "Ville B", CodePostal = "Code B", LitsDisponibles = 200 },
-                new Hopital { Nom = "Hôpital C", Adresse = "Adresse C", Ville = "Ville C", CodePostal = "Code C", LitsDisponibles = 300 },
-                new Hopital { Nom = "Hôpital D", Adresse = "Adresse D", Ville = "Ville D", CodePostal = "Code D", LitsDisponibles = 400 }
+                new Hopital { Nom = "Hôpital A", Adresse = "Adresse A", Ville = "Ville A", CodePostal = "Code A", LitsDisponibles = 100, Specialisations = sousListe1},
+                new Hopital { Nom = "Hôpital B", Adresse = "Adresse B", Ville = "Ville B", CodePostal = "Code B", LitsDisponibles = 200, Specialisations = sousListe2 },
+                new Hopital { Nom = "Hôpital C", Adresse = "Adresse C", Ville = "Ville C", CodePostal = "Code C", LitsDisponibles = 300, Specialisations = sousListe3 },
+                new Hopital { Nom = "Hôpital D", Adresse = "Adresse D", Ville = "Ville D", CodePostal = "Code D", LitsDisponibles = 400, Specialisations = sousListe4 }
             };
                 foreach (var hopital in hopitaux)
                 {
@@ -245,10 +277,10 @@ namespace EmergencyResponseSystem_DAL.Database
                 // Création des patients
                 var patients = new List<Patient>
             {
-                new Patient { Nom = "Patient A", Prenom = "Prenom A", NomJF = "", DateNaissance = DateTime.Now.AddYears(-30), Adresse = "Adresse A", Ville = "Ville A", CodePostal = "CodePostal A", NumINSEE = "NumINSEE A", Location = "Location A", SpecialiteRequise = 1 },
-                new Patient { Nom = "Patient B", Prenom = "Prenom B", NomJF = "", DateNaissance = DateTime.Now.AddYears(-40), Adresse = "Adresse B", Ville = "Ville B", CodePostal = "CodePostal B", NumINSEE = "NumINSEE B", Location = "Location B", SpecialiteRequise = 2 },
-                new Patient { Nom = "Patient C", Prenom = "Prenom C", NomJF = "", DateNaissance = DateTime.Now.AddYears(-50), Adresse = "Adresse C", Ville = "Ville C", CodePostal = "CodePostal C", NumINSEE = "NumINSEE C", Location = "Location C", SpecialiteRequise = 3 },
-                new Patient { Nom = "Patient D", Prenom = "Prenom D", NomJF = "", DateNaissance = DateTime.Now.AddYears(-60), Adresse = "Adresse D", Ville = "Ville D", CodePostal = "CodePostal D", NumINSEE = "NumINSEE D", Location = "Location D", SpecialiteRequise = 4 }
+                new Patient { Nom = "Patient A", Prenom = "Prenom A", NomJF = "", DateNaissance = DateTime.Now.AddYears(-30), Adresse = "Adresse A", Ville = "Ville A", CodePostal = "CodePostal A", NumINSEE = "NumINSEE A", HopitalActuel = -1, SpecialiteRequise = 1 },
+                new Patient { Nom = "Patient B", Prenom = "Prenom B", NomJF = "", DateNaissance = DateTime.Now.AddYears(-40), Adresse = "Adresse B", Ville = "Ville B", CodePostal = "CodePostal B", NumINSEE = "NumINSEE B", HopitalActuel = -1, SpecialiteRequise = 2 },
+                new Patient { Nom = "Patient C", Prenom = "Prenom C", NomJF = "", DateNaissance = DateTime.Now.AddYears(-50), Adresse = "Adresse C", Ville = "Ville C", CodePostal = "CodePostal C", NumINSEE = "NumINSEE C", HopitalActuel = -1, SpecialiteRequise = 3 },
+                new Patient { Nom = "Patient D", Prenom = "Prenom D", NomJF = "", DateNaissance = DateTime.Now.AddYears(-60), Adresse = "Adresse D", Ville = "Ville D", CodePostal = "CodePostal D", NumINSEE = "NumINSEE D", HopitalActuel = -1, SpecialiteRequise = 4 }
             };
                 foreach (var patient in patients)
                 {

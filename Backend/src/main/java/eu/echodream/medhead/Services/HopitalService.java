@@ -1,10 +1,12 @@
 package eu.echodream.medhead.Services;
 
 import eu.echodream.medhead.Models.Hopital;
+import eu.echodream.medhead.Models.Specialisation;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.List;
 
 @Service
@@ -37,18 +39,20 @@ public class HopitalService {
     }
 
     public int insert(Hopital hopital) {
-        String query = "INSERT INTO Hopital (Nom, Adresse, Ville, CodePostal, LitsDisponibles) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(query, hopital.getNom(), hopital.getAdresse(), hopital.getVille(),
-                hopital.getCodePostal(), hopital.getLitsDisponibles());
+        String query = "INSERT INTO Hopital (Nom, Adresse, Ville, CodePostal, LitsDisponibles) VALUES (?, ?, ?, ?, ?);";
+        jdbcTemplate.update(query, hopital.getNom(), hopital.getAdresse(), hopital.getVille(), hopital.getCodePostal(), hopital.getLitsDisponibles());
+        int id = jdbcTemplate.queryForObject("SELECT MAX(Id) FROM Hopital", Integer.class);
 
-        // get the last inserted id
-        int id = jdbcTemplate.queryForObject("SELECT last_insert_rowid()", Integer.class);
-
-        // On insère les associations avec les spécialisations
-        hopital.getSpecialisations().forEach(specialisation -> hopitalSpecialisationService.insert(id, specialisation.getId()));
-
+        // On affiche les spécialisations et insère les associations avec les spécialisations dans la console
+        System.out.println("Spécialisations à insérer : ");
+        for (Specialisation specialisation : hopital.getSpecialisations()) {
+            System.out.println(id + " ID : " + specialisation.getId() + ", Libellé : " + specialisation.getLibelle() + ", Catégorie : " + specialisation.getCategorie());
+            hopitalSpecialisationService.insert(id, specialisation.getId());
+        }
         return id;
     }
+
+
 
     public void update(Hopital hopital) {
         String query = "UPDATE Hopital SET Nom = ?, Adresse = ?, Ville = ?, CodePostal = ?, LitsDisponibles = ? WHERE Id = ?";

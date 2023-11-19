@@ -80,7 +80,7 @@
                     Ville: $('#hospitalCity').val(),
                     LitsDisponibles: $('#hospitalBeds').val()
                 };
-                $.post('http://localhost:8080/api/emergency', hospital)
+                $.post('http://localhost:8080/api/Emergency', hospital)
                     .done(function(data) {
                         alert('L\'hôpital a été ajouté avec succès.');
                         loadHospitals();
@@ -92,7 +92,7 @@
         });
 
 		function loadHospitals() {
-			$.get('http://localhost:8080/api/emergency', function(data) {
+			$.get('http://localhost:8080/api/Emergency', function(data) {
 				var tbody = $('#hospitalsTable tbody');
 				tbody.empty();
 				data.forEach(function(hospital) {
@@ -118,7 +118,7 @@ $('#addPatientForm').submit(function(e) {
         SpecialiteRequise: 0
     };
     $.ajax({
-        url: 'http://localhost:8080/api/emergency',
+        url: 'http://localhost:8080/api/Emergency',
         type: 'post',
         contentType: 'application/json',
         data: JSON.stringify(patient),

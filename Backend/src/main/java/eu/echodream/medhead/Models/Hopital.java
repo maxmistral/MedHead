@@ -12,6 +12,7 @@ public class Hopital {
     private int litsDisponibles;
     private List<Specialisation> specialisations;
 
+    public Hopital() { }
     public Hopital(int id, String nom, String adresse, String ville, String codePostal, int litsDisponibles) {
         this.id = id;
         this.nom = nom;
@@ -20,6 +21,16 @@ public class Hopital {
         this.codePostal = codePostal;
         this.litsDisponibles = litsDisponibles;
         this.specialisations = new ArrayList<>();
+    }
+
+    public Hopital(int id, String nom, String adresse, String ville, String codePostal, int litsDisponibles, ArrayList<Specialisation> specialisations) {
+        this.id = id;
+        this.nom = nom;
+        this.adresse = adresse;
+        this.ville = ville;
+        this.codePostal = codePostal;
+        this.litsDisponibles = litsDisponibles;
+        this.specialisations = specialisations;
     }
 
     // Getters

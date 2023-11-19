@@ -11,7 +11,7 @@
         public string Ville { get; set; } // Ville de résidence du patient
         public string CodePostal { get; set; } // Code postal de la ville de résidence du patient
         public string NumINSEE { get; set; } // Numéro de sécurité sociale du patient
-        public string Location { get; set; } // Emplacement actuel du patient
+        public int HopitalActuel { get; set; } // Hopital actuel du patient
         public int SpecialiteRequise { get; set; } // Spécialité médicale dont le patient a besoin
     }
 

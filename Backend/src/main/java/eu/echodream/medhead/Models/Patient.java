@@ -13,10 +13,13 @@ public class Patient {
     private String ville;
     private String codePostal;
     private String numINSEE;
-    private String location;
+    private int hopitalActuel;
     private int specialiteRequise;
 
-    public Patient(int id, String nom, String prenom, String nomJF, Date dateNaissance, String adresse, String ville, String codePostal, String numINSEE, String location, String specialiteRequise) {
+    // Constructeur vide pour com.fasterxml.jackson
+    public  Patient() { }
+
+    public Patient(int id, String nom, String prenom, String nomJF, Date dateNaissance, String adresse, String ville, String codePostal, String numINSEE, int hopitalActuel, int specialiteRequise) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -26,8 +29,8 @@ public class Patient {
         this.ville = ville;
         this.codePostal = codePostal;
         this.numINSEE = numINSEE;
-        this.location = location;
-        this.specialiteRequise = Integer.parseInt(specialiteRequise);
+        this.hopitalActuel = hopitalActuel;
+        this.specialiteRequise = specialiteRequise;
     }
 
     // Getters
@@ -40,7 +43,7 @@ public class Patient {
     public String getVille() { return ville; }
     public String getCodePostal() { return codePostal; }
     public String getNumINSEE() { return numINSEE; }
-    public String getLocation() { return location; }
+    public int getHopitalActuel() { return hopitalActuel; }
     public int getSpecialiteRequise() { return specialiteRequise; }
 
     // Setters
@@ -53,6 +56,6 @@ public class Patient {
     public void setVille(String ville) { this.ville = ville; }
     public void setCodePostal(String codePostal) { this.codePostal = codePostal; }
     public void setNumINSEE(String numINSEE) { this.numINSEE = numINSEE; }
-    public void setLocation(String location) { this.location = location; }
+    public void getHopitalActuel(int hopitalActuel) { this.hopitalActuel = hopitalActuel; }
     public void setSpecialiteRequise(int specialiteRequise) { this.specialiteRequise = specialiteRequise; }
 }

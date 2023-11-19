@@ -1,5 +1,6 @@
 package eu.echodream.medhead.Services;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,13 @@ public class HopitalSpecialisationService {
 
     public void insert(int hopitalId, int specialisationId) {
         String checkQuery = "SELECT 1 FROM HopitalSpecialisation WHERE HopitalId = ? AND SpecialisationId = ?";
-        Integer exists = jdbcTemplate.queryForObject(checkQuery, new Object[]{hopitalId, specialisationId}, Integer.class);
-        if (exists == null) {
+        try {
+            Integer exists = jdbcTemplate.queryForObject(checkQuery, new Object[]{hopitalId, specialisationId}, Integer.class);
+            // Si on arrive ici, la ligne existe déjà
+        } catch (EmptyResultDataAccessException e) {
+            // On insère la nouvelle ligne car elle n'existe pas
             String insertQuery = "INSERT INTO HopitalSpecialisation (HopitalId, SpecialisationId) VALUES (?, ?)";
             jdbcTemplate.update(insertQuery, hopitalId, specialisationId);
-        } else {
-            // Handle the case where the record already exists
         }
     }
 

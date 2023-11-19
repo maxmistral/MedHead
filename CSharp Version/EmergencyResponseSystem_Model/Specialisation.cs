@@ -10,5 +10,6 @@ namespace EmergencyResponseSystem_Models
     {
         public int Id { get; set; }
         public string Libelle { get; set; }
+        public string Categorie { get; set; }
     }
 }
