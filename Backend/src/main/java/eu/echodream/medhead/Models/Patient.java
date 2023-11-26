@@ -31,6 +31,7 @@ public class Patient {
         this.numINSEE = numINSEE;
         this.hopitalActuel = hopitalActuel;
         this.specialiteRequise = specialiteRequise;
+
     }
 
     // Getters

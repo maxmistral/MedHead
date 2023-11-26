@@ -30,7 +30,15 @@ public class MapEngine {
     }
 
     public static Coordinate getCoordinates(String address, String city, String postcode) throws Exception {
-        String query = URLEncoder.encode(address + " " + city + " " + postcode, StandardCharsets.UTF_8.toString());
+        String fullAddress = address + " " + city + " " + postcode;
+        Coordinate cachedCoordinate = CoordinatesCache.getCoordinates(fullAddress);
+
+        if (cachedCoordinate != null) {
+            //System.out.println("Données en cache récupérées");
+            return cachedCoordinate;
+        }
+
+        String query = URLEncoder.encode(fullAddress, StandardCharsets.UTF_8.toString());
         String url = "https://api-adresse.data.gouv.fr/search/?q=" + query;
 
         URL obj = new URL(url);
@@ -60,9 +68,13 @@ public class MapEngine {
 
             double lat = coordinates.get(1).getAsDouble();
             double lng = coordinates.get(0).getAsDouble();
+            Coordinate newCoordinate = new Coordinate(lat, lng);
 
-            return new Coordinate(lat, lng);
+            CoordinatesCache.putCoordinates(fullAddress, newCoordinate);
+            System.out.println("Ajout de nouveaux coordonnées en cache.");
+            return newCoordinate;
         }
+
 
         return null;
     }

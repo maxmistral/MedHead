@@ -63,8 +63,8 @@ public class StartupService {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
                 reader.lines().skip(1).forEach(line -> {
                     String[] parts = line.split(";");
-                    String libelle = parts[0].trim();
-                    String categorie = parts[1].trim();
+                    String categorie = parts[0].trim();
+                    String libelle = parts[1].trim();
                     Specialisation specialisation = new Specialisation(0, libelle, categorie);
                     specialisation.setId(specialisationService.insert(specialisation));
                     specialisations.add(specialisation);
