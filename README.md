@@ -11,14 +11,14 @@ Ce repository est organisé en plusieurs parties :
 ### Répertoire Backend
 Ce répertoire contient le backend du projet, développé en Java Spring.
 
-### Répertoire CSharp Version
-Ce répertoire contient une version alternative du backend du projet, développée en C# ASP.NET, ainsi que le frontend associé, développé en Blazor.
-
 ### Répertoire Front
 Ce répertoire contient le frontend principal du projet, développé en HTML/CSS/JS et communiquant avec le backend.
 
-### Répertoire .github/workflows
-Ce répertoire contient le workflow Gradle utilisé pour l'intégration continue.
+### Répertoire CSharp Version
+Ce répertoire contient une vieille version alternative du backend du projet, développée en C# ASP.NET, ainsi qu'un début de frontend associé, développé en Blazor.
 
-## Exigences de la PoC
+### Répertoire .github/workflows
+Ce répertoire contient le workflow Gradle utilisé pour l'intégration continue de l'API.
+
+## Exigences de la PoC (/PoC)
 Les exigences clés pour la PoC sont détaillées dans un document séparé, disponible dans le répertoire d'architecture.
