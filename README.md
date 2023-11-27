@@ -53,7 +53,7 @@ Il est nécessaire de s'assurer que les dépendances suivantes soient installée
 ### 🖥️ Tester l'Application
 
 - Ouvrez `http://localhost:8081` dans un navigateur pour accéder à l'interface utilisateur.
-- Il est possible de consulter la documentation de l'API en accédant à l'URL de la documentation Swagger (`http://localhost:8081/swagger-ui/index.html`).
+- Il est possible de consulter la documentation de l'API en accédant à l'URL de la documentation Swagger (`http://localhost:8080/swagger-ui/index.html`).
 
 ### Autres
 
