@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomePage from './components/HomePage.vue';
-import PatientCrud from './components/PatientCrud.vue';
-import HospitalCrud from './components/HospitalCrud.vue';
-import StressTest from './components/StressTest.vue';
+import HomePage from '@components/HomePage.vue';
+import PatientCrud from '@components/PatientCrud.vue';
+import HospitalCrud from '@components/HospitalCrud.vue';
+import StressTest from '@components/StressTest.vue';
 
 const routes = [
   { path: '/', component: HomePage },
