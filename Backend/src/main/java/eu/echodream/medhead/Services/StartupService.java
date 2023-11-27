@@ -43,7 +43,8 @@ public class StartupService {
             fillHospitalsAndPatients(specialisations);
         }
     }
-
+    
+    // Vérifie si la table contient des éléments
     private boolean isDatabaseEmpty() {
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Specialisation", Integer.class);
         return (count != null && count == 0);
