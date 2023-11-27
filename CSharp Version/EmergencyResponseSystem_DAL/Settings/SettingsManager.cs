@@ -32,7 +32,7 @@ namespace EmergencyResponseSystem_DAL.Settings
 
         public string GetDatabasePassword()
         {
-            return GetConfig("DatabasePassword", null);
+            return GetConfig("DatabasePassword");
         }
 
         public void SetDatabasePassword(string password)

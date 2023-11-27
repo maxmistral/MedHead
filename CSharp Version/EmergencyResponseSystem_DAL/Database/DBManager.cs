@@ -17,24 +17,26 @@ namespace EmergencyResponseSystem_DAL.Database
         /// <summary>
         /// Retourne la connexion à la base de données courante ou en crée une nouvelle si celle-ci n'existe pas ou est fermée.
         /// </summary>
-        /// <param name="bNewConnection"></param>
         /// <returns></returns>
-        public static SQLiteConnection GetDBConnexion(bool bNewConnection = false)
+        public static SQLiteConnection GetDBConnexion()
         {
-            if (bNewConnection)
+            if (_CurrentConnection == null || _CurrentConnection.State == ConnectionState.Closed)
             {
-                return GetNewDBConnection();
+                _CurrentConnection = GetNewDBConnection();
             }
-            else
-            {
-                if (_CurrentConnection == null || _CurrentConnection.State == ConnectionState.Closed)
-                {
-                    _CurrentConnection = GetNewDBConnection();
-                }
-                return _CurrentConnection;
-            }
-
+            return _CurrentConnection;
         }
+
+        /// <summary>
+        /// Retourne une nouvelle connexion à la base de données.
+        /// </summary>
+        /// <param name="bNewConnection">Indique si une nouvelle connexion doit être créée.</param>
+        /// <returns></returns>
+        public static SQLiteConnection GetDBConnexion(bool bNewConnection)
+        {
+            return GetNewDBConnection();
+        }
+
         private static SQLiteConnection GetNewDBConnection()
         {
             SQLiteConnection sqlite_conn;
