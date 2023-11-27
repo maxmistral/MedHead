@@ -220,7 +220,9 @@ namespace EmergencyResponseSystem_DAL.Database
                     {
                         var line = reader.ReadLine();
                         if (line == null)
+                        {
                             break;
+                        }
 
                         var values = line.Split(';');
 
